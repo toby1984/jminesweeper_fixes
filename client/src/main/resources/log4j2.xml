@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="5">
+  <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d %-5p [%t|%X{user}] %C:%L - %m%n "/>
+    </Console>
+    <File name="file" fileName="/tmp/client.log">
+      <PatternLayout pattern="%d %-5p [%t|%X{user}] %C:%L - %m%n"/>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Logger name="com.voipfuture" level="TRACE"/>
+    <Root level="INFO">
+<!--      <AppenderRef ref="STDOUT"/>-->
+       <AppenderRef ref="file"/>
+    </Root>
+  </Loggers>
+</Configuration>

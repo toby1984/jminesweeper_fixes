@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>com.voipfuture.jminesweep</groupId>
+  <artifactId>jminesweep-parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <description>Template project with all files required for the Voipfuture GmbH "JMinesweeper" assignment</description>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <javac.source>20</javac.source>
+    <javac.target>20</javac.target>
+    <javac.release>20</javac.release>
+    <log4.version>2.20.0</log4.version>
+
+    <junit.version>5.10.0</junit.version>
+    
+    <preview>--enable-preview</preview>
+    <illegalAccess>--add-opens java.base/java.lang=ALL-UNNAMED</illegalAccess>
+    <jdkModules>--add-modules jdk.incubator.foreign</jdkModules>
+    <javac.compilation.options1>${preview}</javac.compilation.options1>
+    <javac.compilation.options2>-proc:none</javac.compilation.options2>
+    <java.runtime.options>${preview} ${jdkModules} ${illegalAccess} -Dfile.encoding=${project.build.sourceEncoding}</java.runtime.options>
+
+  </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+      
+      <!-- Logging -->
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4.version}</version>
+      </dependency>
+      
+      <!-- other stuff -->
+      <dependency>
+        <groupId>com.voipfuture.jminesweep</groupId>
+        <artifactId>jminesweep-client</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.voipfuture.jminesweep</groupId>
+        <artifactId>jminesweep-server</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.voipfuture.jminesweep</groupId>
+        <artifactId>jminesweep-shared</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+
+      <!-- Testing -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.assertj</groupId>
+          <artifactId>assertj-core</artifactId>
+          <version>3.24.2</version>
+          <scope>test</scope>
+      </dependency>
+      
+      <!-- Misc -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.12.0</version>
+      </dependency>
+      
+    </dependencies>
+  </dependencyManagement>
+  
+  <dependencies>
+    
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
+
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-clean-plugin</artifactId><version>3.2.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-install-plugin</artifactId><version>3.1.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-site-plugin</artifactId><version>3.12.1</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-deploy-plugin</artifactId><version>3.1.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-reactor-plugin</artifactId><version>1.1</version></plugin>
+
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.0.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-jar-plugin</artifactId><version>3.3.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-resources-plugin</artifactId><version>3.3.0</version></plugin>
+        <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-assembly-plugin</artifactId><version>2.2-beta-5</version></plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+          <configuration>
+              <source>${javac.source}</source>
+              <target>${javac.target}</target>
+              <release>${javac.release}</release>
+              <encoding>UTF-8</encoding>
+              <compilerArgs>
+                  <arg>${javac.compilation.options1}</arg>
+                  <arg>${javac.compilation.options2}</arg>
+              </compilerArgs>
+              <showWarnings>false</showWarnings>
+          </configuration>
+      </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-versions</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>[3.9.1,)</version>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>[20,21)</version>
+                                    </requireJavaVersion>
+                                    <requirePluginVersions>
+                                        <message>You must explicitly set version numbers for all plugins used in your pom.xml !</message>
+                                        <banLatest>true</banLatest>
+                                        <banRelease>true</banRelease>
+                                        <banSnapshots>true</banSnapshots>
+                                        <phases>clean,compile,install,deploy,site</phases>
+                                        <additionalPlugins>
+                                            <additionalPlugin>org.apache.maven.plugins:maven-reactor-plugin</additionalPlugin>
+                                        </additionalPlugins>
+                                    </requirePluginVersions>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>client</module>
+    <module>server</module>
+    <module>shared</module>
+  </modules>
+
+</project>

@@ -8,21 +8,21 @@ Please carefully read everything in this document as well as in the ![Requiremen
 
 1. Assignment solutions that alter **any** of the files provided as part of this template project **except** for the ones listed below will be considered as INVALID unless those modifications have been accepted by Voipfuture Gmbh beforehand.
 
-The **only** files that are part of this template project and **may** be altered are 
+    The **only** files that are part of this template project and **may** be altered are 
+    
+        - run_server.sh
+        - run_client.sh
+        - server/src/main/resources/log4j2.xml
+        - client/src/main/resources/log4j2.xml
+        - server/src/main/java/com/voipfuture/jminesweep/server/Server.java
 
-- run_server.sh
-- run_client.sh
-- server/src/main/resources/log4j2.xml
-- client/src/main/resources/log4j2.xml
-- server/src/main/java/com/voipfuture/jminesweep/server/Server.java
-
-Adding additional files to the 'server' submodule is of course permitted (and in fact required unless you want to cram all of your code into the com.voipfuture.jminesweep.server.Server class which I do not recommend unless you come up with a really short solution).
+    Adding additional files to the 'server' submodule is of course permitted (and in fact required unless you want to cram all of your code into the com.voipfuture.jminesweep.server.Server class which I do not recommend unless you come up with a really short solution).
 
 2. Total time spent on this assignment should be between 2-4 hours max (with 2 hours being more likely than 4 hours).
 3. **Make sure to thoroughly read this whole file as well as the requirements before starting to work on the assignment**
 4. While testing dependencies (JUnit, AssertJ, Mockito) are available to all submodules, you do **not** have to write any unit tests
 unless you want to or need them for debugging 
-5. Any non-testing code you're writing as part of your solution should be what you would consider "production-grade code" (as you would write it when working on the job,expecting that your colleagues have to touch it as well)
+5. Any non-testing code you're writing as part of your solution should be what you would consider "production-grade code" (as you would write it when working on the job,fully expecting that some unlucky colleagues or your future self years from now have to touch it again)
 6. The main point of this assignment is to gauge applicant skill levels and have something to talk about during the interview process. 
 This is not about whether braces go on the same or next line or writing the fastest implementation on earth (though being aware of performance tradeoffs made during development **is** part of software development best practices so questions related to this may come up)
 
@@ -32,7 +32,7 @@ Building **and** running this project requires
 
 - Java 20 (Eclipse Temurin has been used during development) as it relies on the "Project Panama" FFI 
 to call POSIX termios functions which is still in preview stage.
-- a Linux/POSIX environment (not sure if MacOS is POSIX-compliant enough so I suggest just firing up a Linux VM if weird
+- a Linux/POSIX environment (not sure if macOS is POSIX-compliant enough, so I suggest just firing up a Linux VM if weird
 errors come up when running the console client application)
 - Maven >= 3.9.1 for building
 

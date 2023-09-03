@@ -2,14 +2,14 @@
 
 Voipfuture management has just decided to diversify our business and enter the gaming industry which has been soaring to new heights lately.
 
-It was decided to start out with a rather basic but popular game that is guaranteed to rake in big $$$ once we start adding micro-transactions and vanity items.
+It was decided to start out with a rather basic but popular game that is guaranteed to rake in big $$$ once we start adding microtransactions and vanity items.
 The game will be called... JMinesweeper !
 
 # General Requirements
 
 - client-server architecture
 - ~~to thwart competitors~~ for performance reasons a proprietary binary network protocol will be used for communication between clients and the server
-- we're kind of low on development resources so instead of the initially planned immersive VR experience using the latest version of Unity we took inspiration from Dwarf Fortress and decided to build a ANSI terminal version instead.
+- we're kind of low on development resources so instead of the initially planned immersive VR experience using the latest version of Unity we took inspiration from Dwarf Fortress and decided to build an ANSI terminal version instead.
 
 # Networking Protocol
 
@@ -62,17 +62,17 @@ sequenceDiagram
 - JDK 20 command-line console application running on Linux
 - needs to support specifying the remote server name/address as well as the game's playing field size (in rows and columns) and the desired difficulty level via command-line options    
 
-    | Option        | Description                          |
-    |---------------|--------------------------------------|
-    | -r,--rows     | Height of playing field (1...255)    |
-    | -c,-columns   | Width  of playing field (1...255)    |
-    | -l,--level    | Difficulty level (1,2 or 3)          |
-     | -h,--help    | Explain supported commandline syntax |
+    | Option      | Description                          |
+    |-------------|--------------------------------------|
+    | -r,--rows   | Height of playing field (1...255)    |
+    | -c,-columns | Width  of playing field (1...255)    |
+    | -l,--level  | Difficulty level (1,2 or 3)          |
+    | -h,--help   | Explain supported commandline syntax |
  
 - needs to ask the user for the desired playing field size as well as game difficulty
 - needs to ship with a simple Bash script named run_client.sh that starts the client and passes any command-line options on to the client as well as starting
-  starting the client using default settings (20x10 playing field, difficulty level 1, server 127.0.0.1) when no command-line options are given
-- needs a ANSI terminal emulation to work correctly (set foreground/background colors, move cursor etc)
+  the client using default settings (20x10 playing field, difficulty level 1, server 127.0.0.1) when no command-line options are given
+- needs an ANSI terminal emulation to work correctly (set foreground/background colors, move cursor etc.)
 - connects to server via TCP port 999
 - needs to implement the network protocol as outlined above
 - needs to print any screen content received from the server to the current console

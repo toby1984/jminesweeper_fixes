@@ -114,22 +114,27 @@ The player can select a cell to reveal and depending on the cells content the fo
 
 1. Cell contains a bomb  
     The game immediately ends and the player has lost. The server will now reveal the full playing field to the player, showing the location of all bombs  
-    overlayed by any bomb markers the player may have placed (in a way that both the bomb marker and any bomb at that location are clearly discernible) 
+    overlayed by any bomb markers the player may have placed (in a way that both the bomb marker and any bomb at that location are clearly discernible)  
+    ![Game Lost](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/game_lost.png?raw=true)
 2. The cell does not contain a bomb but at least one of the eight cells adjacent to it contains a bomb  
     The current cell is revealed, showing the number of bombs in the eight cells surrounding it, and the server 
-    awaits the next player action.
+    awaits the next player action.  
+   ![Reveal 1](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/reveal1.png?raw=true)
 3. The cell does not contain a bomb and all eight cells adjacent to it do not contain any bomb  
     The game will performs a depth-first flood-fill by always recursively visiting the cells directly above/below/left/right 
     the current cell and will stop exploring a given direction (continuing with the previous cell instead) as soon as either  
         - a cell containing a bomb is discovered or  
-        - a cell that is adjacent to a cell containing a bomb is discovered and it has not already been revealed by the user during some previous action
+        - a cell that is adjacent to a cell containing a bomb is discovered, and it has not already been revealed by the user during some previous action
+   ![Reveal 2](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/reveal2.png?raw=true)
 
 If the player tries to reveal a cell that has cell has already been revealed before, nothing happens. 
 
 The game reaches a terminal state when the player either 
 
-- reveals a cell that holds a bomb (player loses) **or**
-- has marked all cells containing a bomb and has revealed all other cells (player wins)
+- reveals a cell that holds a bomb (player loses) **or**  
+    ![Game Lost](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/game_lost.png?raw=true)
+- has marked all cells containing a bomb and has revealed all other cells (player wins)  
+    ![Game Won](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/game_won.png?raw=true)
 
 After the game reaches a terminal state, the server will ignore any further actions sent by the client unless it is 
 either a START telling the server to being a new game or a QUIT telling the server to disconnect the client. 

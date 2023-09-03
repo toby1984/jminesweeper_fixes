@@ -99,12 +99,12 @@ sequenceDiagram
 - needs to be able to handle multiple clients at the same time 
 - with the game being a console game, the following characters should be used to indicate the state of a game cell.    
 
-    | Character(s) | Meaning                                              |
-    |--------------|------------------------------------------------------|
-    | B            | Bomb                                                 |
-    | ?            | Cell hidden/not yet revealed                         |
-    | <whitespace> | Empty cell                                           |
-    | <digit>      | Total number of bombs in cells adjacent to this one  |
+    | Character(s)  | Meaning                                              |
+    |---------------|------------------------------------------------------|
+    | B             | Bomb                                                 |
+    | ?             | Cell hidden/not yet revealed                         |
+    | .             | Empty cell                                           |
+    | <digit>       | Total number of bombs in cells adjacent to this one  |
 
 # Minesweeper gameplay rules
 
@@ -142,7 +142,7 @@ The game reaches a terminal state when the player either
 
 - reveals a cell that holds a bomb (player loses) **or**  
     ![Game Lost](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/game_lost.png?raw=true)
-- has marked all cells containing a bomb and has revealed all other cells (player wins)  
+- has marked all cells containing a bomb and no other cells (player wins)  
     ![Game Won](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/game_won.png?raw=true)
 
 After the game reaches a terminal state, the server will ignore any further actions sent by the client unless it is 

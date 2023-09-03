@@ -37,7 +37,7 @@ The following packet types are being used:
 | 9       | SCREEN_CONTENT              | Current screen content                                                      | Variable length, screen content as a UTF-8 string                                                                 |
 | 10      | TOGGLE_DEBUG_MODE           | Toggle debug mode                                                           | NONE                                                                                                              |
 
-The protocol uses TCP port 9999. When receiving a valid packet, the server will execute the associated action and then respond with a type 9 packet (Current Screen Content) that holds current the screen content.
+The protocol uses TCP port 9999. When receiving a valid packet, the server will execute the associated action and then respond with a type 9 packet (Current Screen Content) that holds the current screen content.
 This does **not** apply to packet type 9 (Quit) though as the server will immediately close the connection after receiving it.
 If the server receives a command that is not compatible with the current game state (like trying to move the cursor although the player has already lost the current game), it
 will not perform the associated action and simply respond with the current screen content.

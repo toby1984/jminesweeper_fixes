@@ -6,6 +6,9 @@ Fork it to start working on your interview assignment.
 
 Please carefully read everything in this document as well as in the ![Requirements document](https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/REQUIREMENTS.md) before beginning to work on the assignment as this will make sure that all applicants are facing the same challenges and solutions are comparable.
 
+> [!WARNING]
+> If anything in the provided documents is unclear to you, do not hesitate to ask me (tobias.gierke@voipfuture.com) for guidance.  
+
 1. Assignment solutions that alter **any** of the files provided as part of this template project **except** for the ones listed below will be considered as INVALID unless those modifications have been accepted by Voipfuture Gmbh beforehand.
 
     The **only** files that are part of this template project and **may** be altered are 

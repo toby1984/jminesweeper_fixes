@@ -78,17 +78,18 @@ sequenceDiagram
 - needs to print any screen content received from the server to the current console
 - needs to switch the console to unbuffered mode (so single key presses can be read) and disable local echo (so any key presses while playing the game are not actually rendered)
 - uses  the following keyboard keys to control the game:    
-      | Key    | Action                             |
-      |--------|------------------------------------|
-      | w      | Move cursor up                     |
-      | a      | Move cursor left                   |
-      | s      | Move cursor down                   |
-      | d      | Move cursor right                  |
-      | TAB    | Start a new game                   |
-      | SPACE  | Toggle bomb mark at cursor position|
-      | RETURN | Reveal cell at cursor position     |
-      | X      | Quit game                          |
-      | #      | Toggle debug mode                  |
+
+    | Key    | Action                             |
+    |--------|------------------------------------|
+    | w      | Move cursor up                     |
+    | a      | Move cursor left                   |
+    | s      | Move cursor down                   |
+    | d      | Move cursor right                  |
+    | TAB    | Start a new game                   |
+    | SPACE  | Toggle bomb mark at cursor position|
+    | RETURN | Reveal cell at cursor position     |
+    | X      | Quit game                          |
+    | #      | Toggle debug mode                  |
 
 # Server Requirements
 

@@ -97,7 +97,8 @@ sequenceDiagram
 - need to implement the network protocol as outlined above
 - needs to implement minesweeper game logic as outlined below, supporting a playing field size between 1x1 and 255x255 cells as well as three difficulty levels (easy,medium,hard) 
 - needs to be able to handle multiple clients at the same time 
-- with the game being a console game, the following characters should be used to indicate the state of a game cell.    
+- with the game being a console game, the following characters **MAY** be used to indicate the state of a game cell. It's fine if the game uses different characters/renders 
+    the game board using more fancy "graphics" as long as the meaning is obvious. 
 
     | Character(s) | Meaning                                                            |
     |--------------|--------------------------------------------------------------------|

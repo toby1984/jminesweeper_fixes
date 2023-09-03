@@ -129,14 +129,15 @@ outer:
                     case EOF -> {
                         break outer;
                     }
-                    case X -> toggleDebugMode();
+                    case HASH -> toggleDebugMode();
                     case W -> move( Direction.UP );
                     case A -> move( Direction.LEFT );
                     case S -> move( Direction.DOWN );
                     case D -> move( Direction.RIGHT );
                     case SPACE -> toggleBombMark();
                     case ENTER -> reveal();
-                    case TAB ->
+                    case TAB -> start();
+                    case X ->
                     {
                         LOG.info( "User wants to quit." );
                         break outer;

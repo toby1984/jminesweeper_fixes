@@ -78,16 +78,17 @@ sequenceDiagram
 - needs to print any screen content received from the server to the current console
 - needs to switch the console to unbuffered mode (so single key presses can be read) and disable local echo (so any key presses while playing the game are not actually rendered)
 - uses  the following keyboard keys to control the game:    
-  | Key | Action |
-  |-----|--------|
-  | w   | Move cursor up |
-  | a   | Move cursor left |
-  | s   | Move cursor down |
-  | d   | Move cursor right |
-  | SPACE | Toggle bomb mark at cursor position |
-  | RETURN | Reveal cell at cursor position |
-  | TAB   | Quit game |
-  | X   | Toggle debug mode |
+      | Key    | Action                             |
+      |--------|------------------------------------|
+      | w      | Move cursor up                     |
+      | a      | Move cursor left                   |
+      | s      | Move cursor down                   |
+      | d      | Move cursor right                  |
+      | TAB    | Start a new game                   |
+      | SPACE  | Toggle bomb mark at cursor position|
+      | RETURN | Reveal cell at cursor position     |
+      | X      | Quit game                          |
+      | #      | Toggle debug mode                  |
 
 # Server Requirements
 
@@ -96,6 +97,14 @@ sequenceDiagram
 - need to implement the network protocol as outlined above
 - needs to implement minesweeper game logic as outlined below, supporting a playing field size between 1x1 and 255x255 cells as well as three difficulty levels (easy,medium,hard) 
 - needs to be able to handle multiple clients at the same time 
+- with the game being a console game, the following characters should be used to indicate the state of a game cell.    
+
+    | Character(s) | Meaning                                              |
+    |--------------|------------------------------------------------------|
+    | B            | Bomb                                                 |
+    | ?            | Cell hidden/not yet revealed                         |
+    | <whitespace> | Empty cell                                           |
+    | <digit>      | Total number of bombs in cells adjacent to this one  |
 
 # Minesweeper gameplay rules
 

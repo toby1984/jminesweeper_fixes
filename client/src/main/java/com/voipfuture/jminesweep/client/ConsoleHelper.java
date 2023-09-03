@@ -36,6 +36,7 @@ public class ConsoleHelper
         D(0x64), // D
         SPACE(0x20), // SPACE
         ENTER(0x0a), // ENTER
+        HASH(0x23), // #
         X(0x78), // X
         TAB(0x09), // TAB
         EOF(0x00), // not a key, indicates we received EOF from the console

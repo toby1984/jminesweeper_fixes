@@ -15,7 +15,7 @@ The **only** files that are part of this template project and **may** be altered
 - server/src/main/resources/log4j2.xml
 - client/src/main/resources/log4j2.xml
 
-2. Total time spent on this assignment should be between 2-4 hours max (with 2 hours being much more likely than 4 hours).
+2. Total time spent on this assignment should be between 2-4 hours max (with 2 hours being more likely than 4 hours).
 3. **Make sure to read this whole file before starting to work on the assignment**
 4. While testing frameworks (JUnit, AssertJ) are available as part of the build process, you do **not** have to write any unit tests
 unless you want to or need them during debugging 
@@ -29,31 +29,32 @@ Building **and** running this project requires
 
 - Java 20 (Eclipse Temurin has been used during development) as it relies on the "Project Panama" FFI 
 to call POSIX termios functions which is still in preview stage.
-- a Linux/POSIX environment (not sure if MacOS is POSIX-compliant enough to I suggest just firing up a Linux VM if weird
-errors come up when running the console client application
-- Maven 3.9.x for building
+- a Linux/POSIX environment (not sure if MacOS is POSIX-compliant enough so I suggest just firing up a Linux VM if weird
+errors come up when running the console client application)
+- Maven >= 3.9.1 for building
 
-# The template project
+# Template project repository
 
-This repository lays out the overall project structure, providing the necessary Maven pom.xml files to build and run both
-the client and the server application and the console client itself. The assignment is about developing a server that is compatible
-with the existing client and implements the popular minesweeper game.
+This repository lays out the overall project structure, providing the necessary files to build and run both
+the client and the server application. The assignment is about developing a server that is compatible
+with the existing client.
 
 # Template project files
 
-The template project is a multi-module maven project that contains of three modules:
+The template project is a multi-module Maven project that has three modules:
 
 - a client module
 - a server module
 - a shared module that holds code shared between client and server 
 
-The Maven parent POM contributes all necessary settings (compiler level, compiler flags) as well as the following dependencies to the submodules
+The Maven parent POM contributes all necessary settings (compiler level, compiler flags, version numbers etc.) 
+as well as the following dependencies to every submodule:
 
 1. Log4j2 for logging
 2. Apache commons-lang v3 for general utility methods
 3. JUnit 5 for testing
 4. AssertJ for testing
-5. 
+5. Mockito 5 for testing
 
 ```
 .

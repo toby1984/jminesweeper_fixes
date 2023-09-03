@@ -99,12 +99,12 @@ sequenceDiagram
 - needs to be able to handle multiple clients at the same time 
 - with the game being a console game, the following characters should be used to indicate the state of a game cell.    
 
-    | Character(s)  | Meaning                                              |
-    |---------------|------------------------------------------------------|
-    | B             | Bomb                                                 |
-    | ?             | Cell hidden/not yet revealed                         |
-    | .             | Empty cell                                           |
-    | <digit>       | Total number of bombs in cells adjacent to this one  |
+    | Character(s) | Meaning                                                            |
+    |--------------|--------------------------------------------------------------------|
+    | B            | Bomb                                                               |
+    | ?            | Cell hidden/not yet revealed                                       |
+    | .            | Empty cell                                                         |
+    | `<digit>`    | Total number of bombs within the eight cells adjacent to this cell |
 
 # Minesweeper gameplay rules
 

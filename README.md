@@ -130,7 +130,7 @@ This is what it reads:
 
 ```
 To: you <you@voipfuture.com>
-From: Tobias Gierke <tobias.gierke@voipfuture.com>
+From: BigBoss@voipfuture.com
 Subject: Urgent !!!1
 
 Hi,

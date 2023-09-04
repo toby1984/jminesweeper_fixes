@@ -1,4 +1,4 @@
-This repository holds scaffolding for the "jminesweeter" interview assignment. 
+This repository holds scaffolding for the "jminesweeper" interview assignment. 
 
 Fork it to start working on your interview assignment.
 

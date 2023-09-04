@@ -135,9 +135,13 @@ Subject: Urgent !!!1
 
 Hi,
 
-I know that it's your first day and you're not up to speed yet but we have this REALLY SUPER IMPORTANT new project that needs just a few tiny finishing touches before it's released. Tobias was working on it and said its "almost complete" but he's on a 4-week vacation and the customer demands a first version RIGHT NOW. 
+I know that it's your first day and you're not up to speed yet but we have this REALLY SUPER IMPORTANT new project
+that needs just a few tiny finishing touches before it's released. Tobias was working on it and said
+its "almost complete" but he's on a 4-week vacation and the customer demands a first version RIGHT NOW. 
 
-Can you please check the existing source code (just fork https://github.com/Voipfuture-GmbH/jminesweeper.git) for the missing parts and implement those ?
+Can you please check the existing source code (just fork https://github.com/Voipfuture-GmbH/jminesweeper.git)
+for the missing parts and implement those ?
+
 The requirements can be found here: https://github.com/Voipfuture-GmbH/jminesweeper/blob/master/REQUIREMENTS.md
 
 Thank you very much !!!

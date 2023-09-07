@@ -6,7 +6,12 @@ public class BombCell extends GameCell {
     }
 
     @Override
+    void triggerOnFlagEffects(GameBoard board) {
+        board.updateGameStateIfWon();
+    }
+
+    @Override
     void triggerSelectEffects(GameBoard board) {
-        // Game over
+        board.setGameState(GameBoard.GameState.LOST);
     }
 }

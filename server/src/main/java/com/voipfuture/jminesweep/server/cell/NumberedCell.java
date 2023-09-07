@@ -7,6 +7,10 @@ public class NumberedCell extends GameCell {
     }
 
     @Override
+    void triggerOnFlagEffects(GameBoard board) {
+    }
+
+    @Override
     void triggerSelectEffects(GameBoard board) {
     }
 

@@ -6,6 +6,10 @@ public class EmptyCell extends GameCell {
     }
 
     @Override
+    void triggerOnFlagEffects(GameBoard board) {
+    }
+
+    @Override
     void triggerSelectEffects(GameBoard board) {
         // An empty cell triggers the select effect recursively to its surrounding
         GameCell[][] gameCells = board.getGameCells();

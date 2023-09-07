@@ -2,34 +2,62 @@ package com.voipfuture.jminesweep.server.cell;
 
 import com.voipfuture.jminesweep.shared.Difficulty;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class GameBoard {
     private int[] cursorPosition = new int[]{0, 0};
+
+    private int numberOfBombs;
     private GameCell[][] gameCells;
+    private GameState gameState = GameState.ONGOING;
+
+    public enum GameState {
+        ONGOING,
+        WON,
+        LOST
+    }
+
     public GameBoard(int xSize, int ySize, Difficulty difficulty) {
         float bombDensity = difficultyToBombDensity(difficulty);
-        final int numberOfBombs = (int) Math.ceil(xSize * ySize * bombDensity);
+        // There should at least be one bomb or else it's not a game anymore
+        final int numberOfBombs = (int) Math.max(Math.ceil(xSize * ySize * bombDensity), 1);
+        this.numberOfBombs = numberOfBombs;
         generateInitialBoard(xSize, ySize, numberOfBombs);
     }
 
-    public boolean isGameWon() {
-        for (GameCell[] gameCell : gameCells) {
-            for (GameCell cell : gameCells[0]) {
-                if (cell.getCellState() == GameCell.CellState.UNKNOWN) {
-                    return false;
-                }
-            }
+    public void updateGameStateIfWon() {
+        if (isGameWon()) {
+            setGameState(GameState.WON);
         }
-        return true;
+    }
+
+    public boolean isGameWon() {
+        // The user flagged only bombs and all the bombs
+        return numberOfBombs == 0 && Arrays.stream(getGameCells())
+                .flatMap(Arrays::stream)
+                .filter(cell -> cell instanceof BombCell)
+                .allMatch(cell -> cell.getCellState() == GameCell.CellState.FLAGGED);
     }
 
     public String render() {
         final StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < gameCells.length; ++i) {
+        for (GameCell[] gameCell : gameCells) {
             for (int j = 0; j < gameCells[0].length; ++j) {
-                builder.append(gameCells[i][j].toString());
+                builder.append(gameCell[j].getClientGuiCell());
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+
+    public String renderRevealed() {
+        final StringBuilder builder = new StringBuilder();
+
+        for (GameCell[] gameCell : gameCells) {
+            for (int j = 0; j < gameCells[0].length; ++j) {
+                builder.append(gameCell[j].getRevealedGuiCell());
             }
             builder.append("\n");
         }
@@ -75,7 +103,7 @@ public class GameBoard {
                 int comparedX = xCoord + i;
                 int comparedY = yCoord + j;
                 if (comparedX > 0 && comparedX < cells.length &&
-                    comparedY > 0 && comparedY < cells[0].length) {
+                        comparedY > 0 && comparedY < cells[0].length) {
                     GameCell comparedCell = cells[comparedX][comparedY];
                     if (null != comparedCell) {
                         nbOfBombs++;
@@ -85,7 +113,8 @@ public class GameBoard {
         }
         return nbOfBombs;
     }
-    private GameCell[][] shuffle(GameCell[][] a) {
+
+    private void shuffle(GameCell[][] a) {
         Random random = new Random();
         for (int i = a.length - 1; i > 0; i--) {
             for (int j = a[i].length - 1; j > 0; j--) {
@@ -97,7 +126,14 @@ public class GameBoard {
                 a[m][n] = temp;
             }
         }
-        return a;
+    }
+
+    public void flagCellAsBomb() {
+        this.numberOfBombs--;
+    }
+
+    public void unflagCellAsBomb() {
+        this.numberOfBombs++;
     }
 
     private float difficultyToBombDensity(Difficulty difficulty) {
@@ -106,6 +142,22 @@ public class GameBoard {
             case MEDIUM -> 0.25f;
             case HARD -> 0.45f;
         };
+    }
+
+    public int getNumberOfBombs() {
+        return numberOfBombs;
+    }
+
+    public void setNumberOfBombs(int numberOfBombs) {
+        this.numberOfBombs = numberOfBombs;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     public int[] getCursorPosition() {
@@ -146,7 +198,7 @@ public class GameBoard {
 
     public void toggleBombMark() {
         GameCell cursorCell = getCursorCell();
-        cursorCell.toggleFlaggedState();
+        cursorCell.toggleFlaggedState(this);
     }
 
     public void reveal() {

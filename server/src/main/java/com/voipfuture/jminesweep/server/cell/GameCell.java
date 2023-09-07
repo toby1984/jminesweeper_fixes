@@ -1,16 +1,19 @@
 package com.voipfuture.jminesweep.server.cell;
 
 public abstract class GameCell {
+    public static final char EMPTY_CELL_ICON = '.';
+    public static final char UNKNOWN_CELL_ICON = '?';
+    public static final char BOMB_CELL_ICON = 'B';
+    private char revealedChar;
+    private int[] coordinates;
+    private CellState cellState = CellState.UNKNOWN;
     public GameCell(char revealedChar) {
         this.revealedChar = revealedChar;
     }
 
-    private char revealedChar;
-    private int[] coordinates;
-
-    private CellState cellState = CellState.UNKNOWN;
-    public static final char UNKNOWN_CELL_ICON = '?';
-    public static final char BOMB_CELL_ICON = 'B';
+    public char getRevealedChar() {
+        return revealedChar;
+    }
 
     public int[] getCoordinates() {
         return coordinates;
@@ -28,10 +31,8 @@ public abstract class GameCell {
         this.cellState = cellState;
     }
 
-    public static final char EMPTY_CELL_ICON = '.';
 
-
-    public char getRevealedChar() {
+    public char getClientGuiChar() {
         return cellState.getGuiChar(this);
     }
 
@@ -45,14 +46,17 @@ public abstract class GameCell {
         }
     }
 
-    public void toggleFlaggedState() {
+    public void toggleFlaggedState(GameBoard board) {
         if (this.cellState == CellState.FLAGGED) {
             this.cellState = CellState.UNKNOWN;
+            board.unflagCellAsBomb();
         } else if (this.cellState == CellState.UNKNOWN) {
             this.cellState = CellState.FLAGGED;
+            board.flagCellAsBomb();
+            triggerOnFlagEffects(board);
         }
     }
-
+    abstract void triggerOnFlagEffects(GameBoard board);
     abstract void triggerSelectEffects(GameBoard board);
 
     public void select(GameBoard board) {
@@ -60,8 +64,15 @@ public abstract class GameCell {
         triggerSelectEffects(board);
     }
 
+    public String getClientGuiCell() {
+        return "[" + getClientGuiChar() + "]";
+    }
 
-    enum CellState implements CellStateCharProvider {
+    public String getRevealedGuiCell() {
+        return "[" + getRevealedChar() + "]";
+    }
+
+    public enum CellState implements CellStateCharProvider {
         UNKNOWN {
             public char getGuiChar(GameCell cell) {
                 return UNKNOWN_CELL_ICON;
@@ -74,17 +85,12 @@ public abstract class GameCell {
         },
         REVEALED {
             public char getGuiChar(GameCell cell) {
-                return cell.getRevealedChar();
+                return cell.getClientGuiChar();
             }
         }
     }
 
     public interface CellStateCharProvider {
         char getGuiChar(GameCell cell);
-    }
-
-    @Override
-    public String toString() {
-        return "[" + getRevealedChar() + "]";
     }
 }

@@ -4,11 +4,14 @@ public abstract class GameCell {
     public static final char EMPTY_CELL_ICON = '.';
     public static final char UNKNOWN_CELL_ICON = '?';
     public static final char BOMB_CELL_ICON = 'B';
+
+    protected GameBoard board;
     private char revealedChar;
     private int[] coordinates;
     private CellState cellState = CellState.UNKNOWN;
-    public GameCell(char revealedChar) {
+    public GameCell(char revealedChar, GameBoard board) {
         this.revealedChar = revealedChar;
+        this.board = board;
     }
 
     public char getRevealedChar() {
@@ -46,22 +49,26 @@ public abstract class GameCell {
         }
     }
 
-    public void toggleFlaggedState(GameBoard board) {
+    public void toggleFlaggedState() {
         if (this.cellState == CellState.FLAGGED) {
             this.cellState = CellState.UNKNOWN;
-            board.unflagCellAsBomb();
+            this.board.unflagCellAsBomb();
+            triggerOnUnflagEffects();
+
         } else if (this.cellState == CellState.UNKNOWN) {
             this.cellState = CellState.FLAGGED;
-            board.flagCellAsBomb();
-            triggerOnFlagEffects(board);
+            this.board.flagCellAsBomb();
+            triggerOnFlagEffects();
         }
     }
-    abstract void triggerOnFlagEffects(GameBoard board);
-    abstract void triggerSelectEffects(GameBoard board);
+    abstract void triggerOnFlagEffects();
 
-    public void select(GameBoard board) {
+    abstract void triggerOnUnflagEffects();
+    abstract void triggerSelectEffects();
+
+    public void select() {
         setToRevealedState();
-        triggerSelectEffects(board);
+        triggerSelectEffects();
     }
 
     public String getClientGuiCell() {

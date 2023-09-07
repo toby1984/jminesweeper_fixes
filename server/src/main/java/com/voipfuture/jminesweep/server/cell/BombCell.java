@@ -1,17 +1,21 @@
 package com.voipfuture.jminesweep.server.cell;
 
 public class BombCell extends GameCell {
-    public BombCell() {
-        super(BOMB_CELL_ICON);
+    public BombCell(GameBoard board) {
+        super(BOMB_CELL_ICON, board);
     }
 
     @Override
-    void triggerOnFlagEffects(GameBoard board) {
-        board.updateGameStateIfWon();
+    void triggerOnFlagEffects() {
+        this.board.updateGameStateIfWon();
     }
 
     @Override
-    void triggerSelectEffects(GameBoard board) {
-        board.setGameState(GameBoard.GameState.LOST);
+    void triggerOnUnflagEffects() {
+    }
+
+    @Override
+    void triggerSelectEffects() {
+        this.board.setGameState(GameState.LOST);
     }
 }

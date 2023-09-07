@@ -7,16 +7,9 @@ import java.util.Random;
 
 public class GameBoard {
     private int[] cursorPosition = new int[]{0, 0};
-
     private int numberOfBombs;
     private GameCell[][] gameCells;
     private GameState gameState = GameState.ONGOING;
-
-    public enum GameState {
-        ONGOING,
-        WON,
-        LOST
-    }
 
     public GameBoard(int xSize, int ySize, Difficulty difficulty) {
         float bombDensity = difficultyToBombDensity(difficulty);
@@ -52,7 +45,21 @@ public class GameBoard {
         return builder.toString();
     }
 
-    public String renderRevealed() {
+    public String renderVictoryScreen() {
+        final StringBuilder builder = renderRevealed();
+        builder.append("\n");
+        builder.append("GAME WON");
+        return builder.toString();
+    }
+
+    public String renderDefeatScreen() {
+        final StringBuilder builder = renderRevealed();
+        builder.append("\n");
+        builder.append("GAME LOST");
+        return builder.toString();
+    }
+
+    private StringBuilder renderRevealed() {
         final StringBuilder builder = new StringBuilder();
 
         for (GameCell[] gameCell : gameCells) {
@@ -61,7 +68,7 @@ public class GameBoard {
             }
             builder.append("\n");
         }
-        return builder.toString();
+        return builder;
     }
 
     private void generateInitialBoard(int xSize, int ySize, int numberOfBombs) {
@@ -69,7 +76,7 @@ public class GameBoard {
         for (int i = 0; i < xSize; ++i) {
             for (int j = 0; j < ySize; ++j) {
                 if ((i * xSize) + j + 1 <= numberOfBombs) {
-                    gameCells[i][j] = new BombCell();
+                    gameCells[i][j] = new BombCell(this);
                 } else {
                     gameCells[i][j] = null;
                 }
@@ -84,9 +91,9 @@ public class GameBoard {
                 if (null == cell) {
                     int bombCount = getSurroundingBombsCount(gameCells, i, j);
                     if (bombCount == 0) {
-                        gameCells[i][j] = new EmptyCell();
+                        gameCells[i][j] = new EmptyCell(this);
                     } else {
-                        gameCells[i][j] = new NumberedCell(Character.forDigit(bombCount, 10));
+                        gameCells[i][j] = new NumberedCell(Character.forDigit(bombCount, 10), this);
                     }
                 }
             }
@@ -198,7 +205,7 @@ public class GameBoard {
 
     public void toggleBombMark() {
         GameCell cursorCell = getCursorCell();
-        cursorCell.toggleFlaggedState(this);
+        cursorCell.toggleFlaggedState();
     }
 
     public void reveal() {

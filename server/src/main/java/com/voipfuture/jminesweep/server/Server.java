@@ -1,6 +1,7 @@
 package com.voipfuture.jminesweep.server;
 
 import com.voipfuture.jminesweep.server.cell.GameBoard;
+import com.voipfuture.jminesweep.server.cell.GameState;
 import com.voipfuture.jminesweep.shared.Constants;
 import com.voipfuture.jminesweep.shared.Difficulty;
 import com.voipfuture.jminesweep.shared.NetworkPacketType;
@@ -22,33 +23,41 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         serverSocket = new ServerSocket(Constants.SERVER_TCP_PORT);
-        serverSocket.setReuseAddress(true);
-
         // enable binding to the port even though it's still in state TIME_WAIT
         // from a previous program run
+        serverSocket.setReuseAddress(true);
+
         boolean hasProcessedFirstPayload = false;
+outer:
         while (true) {
             clientSocket = serverSocket.accept();
             in = clientSocket.getInputStream();
             out = clientSocket.getOutputStream();
             outputStreamWriter = new OutputStreamWriter(out);
             writer = new BufferedWriter(outputStreamWriter);
+
             while (true) {
+                // FIXME Ugly hack because something is going wrong when reading the InputStream
+                // The payload varies in length only the first one is length = 8
                 executePacket(hasProcessedFirstPayload ? in.readNBytes(1) : in.readNBytes(8));
                 writer.write(NetworkPacketType.SCREEN_CONTENT.id);
-                String render = switch (board.getGameState()) {
+                GameState gameState = board.getGameState();
+                final String gameGUI = switch (gameState) {
                     case ONGOING -> board.render();
-                    case WON -> board.renderRevealed();
-                    case LOST -> board.renderRevealed();
+                    case WON -> board.renderVictoryScreen();
+                    case LOST -> board.renderDefeatScreen();
                 };
-
-                final byte[] renderSize = render.getBytes(StandardCharsets.UTF_8);
+                final byte[] renderSize = gameGUI.getBytes(StandardCharsets.UTF_8);
                 writer.write(new String(Utils.intToNet(renderSize.length)));
-                writer.write(render);
+                writer.write(gameGUI);
                 writer.flush();
                 hasProcessedFirstPayload = true;
+                if (gameState != GameState.ONGOING) {
+                    break outer;
+                }
             }
         }
+        exitGame();
     }
 
     private static void executePacket(byte[] bytes) throws IOException {
@@ -72,16 +81,18 @@ public class Server {
             case MOVE_UP -> board.moveCursorUp();
             case TOGGLE_BOMB_MARK -> board.toggleBombMark();
             case REVEAL -> board.reveal();
-            case QUIT -> {
-                clientSocket.close();
-                serverSocket.close();
-                in.close();
-                out.close();
-                writer.close();
-                outputStreamWriter.close();
-                System.exit(0);
-            }
+            case QUIT -> exitGame();
         }
+    }
+
+    private static void exitGame() throws IOException {
+        clientSocket.close();
+        serverSocket.close();
+        in.close();
+        out.close();
+        writer.close();
+        outputStreamWriter.close();
+        System.exit(0);
     }
 
 }

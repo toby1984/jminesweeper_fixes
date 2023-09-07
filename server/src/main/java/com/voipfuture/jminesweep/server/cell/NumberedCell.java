@@ -2,21 +2,21 @@ package com.voipfuture.jminesweep.server.cell;
 
 public class NumberedCell extends GameCell {
 
-    public NumberedCell(char revealedChar, GameBoard board) {
-        super(revealedChar, board);
+    public NumberedCell(char revealedChar, GameBoard board, int[] coordinates) {
+        super(revealedChar, coordinates, board);
     }
 
     @Override
-    void triggerOnFlagEffects() {
+    public void triggerOnFlagEffects() {
     }
 
     @Override
-    void triggerOnUnflagEffects() {
+    public void triggerOnUnflagEffects() {
         board.updateGameStateIfWon();
     }
 
     @Override
-    void triggerSelectEffects() {
+    public void triggerSelectEffects() {
     }
 
 }

@@ -42,11 +42,7 @@ outer:
                 executePacket(hasProcessedFirstPayload ? in.readNBytes(1) : in.readNBytes(8));
                 writer.write(NetworkPacketType.SCREEN_CONTENT.id);
                 GameState gameState = board.getGameState();
-                final String gameGUI = switch (gameState) {
-                    case ONGOING -> board.render();
-                    case WON -> board.renderVictoryScreen();
-                    case LOST -> board.renderDefeatScreen();
-                };
+                final String gameGUI = board.render();
                 final byte[] renderSize = gameGUI.getBytes(StandardCharsets.UTF_8);
                 writer.write(new String(Utils.intToNet(renderSize.length)));
                 writer.write(gameGUI);
@@ -82,6 +78,7 @@ outer:
             case TOGGLE_BOMB_MARK -> board.toggleBombMark();
             case REVEAL -> board.reveal();
             case QUIT -> exitGame();
+            default -> {}
         }
     }
 

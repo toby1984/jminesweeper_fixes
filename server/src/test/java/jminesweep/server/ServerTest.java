@@ -1,19 +1,16 @@
 package jminesweep.server;
 
 
-import com.voipfuture.jminesweep.server.cell.BombCell;
-import com.voipfuture.jminesweep.server.cell.GameBoard;
-import com.voipfuture.jminesweep.server.cell.GameCell;
-import com.voipfuture.jminesweep.server.cell.GameState;
+import com.voipfuture.jminesweep.server.cell.*;
 import com.voipfuture.jminesweep.shared.Difficulty;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ServerTest {
-
     @Test
     public void testGameWon() {
         // A board with one cell generates one bomb. Flagging it results in a win.
@@ -76,6 +73,32 @@ public class ServerTest {
     @Test
     public void testBombCountIsAtLeastOne() {
         testSpecificBombCount(1, 1, Difficulty.EASY, 1);
+    }
+
+    @Test
+    public void testSolveTheGame() {
+        GameBoard gameBoard = new GameBoard(100, 100, Difficulty.EASY);
+
+    }
+
+    @Test
+    public void testSelectingEmptyCell() {
+        EmptyCell emptyCell = null;
+        // In case a new board does not always create an instance of an empty cell
+        while (emptyCell == null) {
+            // Create a board until there is an empty cell
+            GameBoard gameBoard = new GameBoard(100, 100, Difficulty.EASY);
+            emptyCell = (EmptyCell) Arrays.stream(gameBoard.getGameCells())
+                    .flatMap(Arrays::stream)
+                    .filter(cell -> cell instanceof EmptyCell)
+                    .findAny().orElse(null);
+        }
+        // The surrounding cells of the empty cell are still unknown
+        List<GameCell> surroundingCells = emptyCell.findSurroundingCells();
+        surroundingCells.forEach(cell -> assertEquals(cell.getCellState(), GameCell.CellState.UNKNOWN));
+        emptyCell.select();
+        // The surrounding cells of the empty cell now also revealed
+        surroundingCells.forEach(cell -> assertEquals(cell.getCellState(), GameCell.CellState.REVEALED));
     }
 
     public void testNormalBombCount(Difficulty difficulty, int expectedBombCount) {

@@ -3,6 +3,7 @@ package com.voipfuture.jminesweep.server.cell;
 import com.voipfuture.jminesweep.shared.Difficulty;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class GameBoard {
@@ -34,6 +35,13 @@ public class GameBoard {
     }
 
     public String render() {
+        return switch (gameState) {
+            case ONGOING -> renderOngoingGame();
+            case WON -> renderVictoryScreen();
+            case LOST -> renderDefeatScreen();
+        };
+    }
+    private String renderOngoingGame() {
         final StringBuilder builder = new StringBuilder();
 
         for (GameCell[] gameCell : gameCells) {
@@ -45,14 +53,14 @@ public class GameBoard {
         return builder.toString();
     }
 
-    public String renderVictoryScreen() {
+    private String renderVictoryScreen() {
         final StringBuilder builder = renderRevealed();
         builder.append("\n");
         builder.append("GAME WON");
         return builder.toString();
     }
 
-    public String renderDefeatScreen() {
+    private String renderDefeatScreen() {
         final StringBuilder builder = renderRevealed();
         builder.append("\n");
         builder.append("GAME LOST");
@@ -76,7 +84,7 @@ public class GameBoard {
         for (int i = 0; i < xSize; ++i) {
             for (int j = 0; j < ySize; ++j) {
                 if ((i * xSize) + j + 1 <= numberOfBombs) {
-                    gameCells[i][j] = new BombCell(this);
+                    gameCells[i][j] = new BombCell(this, new int[]{i, j});
                 } else {
                     gameCells[i][j] = null;
                 }
@@ -88,37 +96,25 @@ public class GameBoard {
         for (int i = 0; i < xSize; ++i) {
             for (int j = 0; j < ySize; ++j) {
                 GameCell cell = gameCells[i][j];
+                int[] coordinates = new int[]{i, j};
                 if (null == cell) {
-                    int bombCount = getSurroundingBombsCount(gameCells, i, j);
+                    int bombCount = getSurroundingBombsCount(gameCells, coordinates);
                     if (bombCount == 0) {
-                        gameCells[i][j] = new EmptyCell(this);
+                        gameCells[i][j] = new EmptyCell(this, coordinates);
                     } else {
-                        gameCells[i][j] = new NumberedCell(Character.forDigit(bombCount, 10), this);
+                        gameCells[i][j] = new NumberedCell(Character.forDigit(bombCount, 10), this, coordinates);
                     }
                 }
             }
         }
     }
 
-    private int getSurroundingBombsCount(GameCell[][] cells, int xCoord, int yCoord) {
-        int nbOfBombs = 0;
-        for (int i = -1; i <= 1; ++i) {
-            for (int j = -1; j <= 1; ++j) {
-                if (i == 0 && j == 0) {
-                    continue;
-                }
-                int comparedX = xCoord + i;
-                int comparedY = yCoord + j;
-                if (comparedX > 0 && comparedX < cells.length &&
-                        comparedY > 0 && comparedY < cells[0].length) {
-                    GameCell comparedCell = cells[comparedX][comparedY];
-                    if (null != comparedCell) {
-                        nbOfBombs++;
-                    }
-                }
-            }
-        }
-        return nbOfBombs;
+    private int getSurroundingBombsCount(GameCell[][] cells, int[] coordinates) {
+        return (int) GameCell.findSurroundingCells(coordinates, cells)
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(cell -> cell instanceof BombCell)
+                .count();
     }
 
     private void shuffle(GameCell[][] a) {
@@ -184,23 +180,23 @@ public class GameBoard {
     }
 
     public void moveCursorUp() {
-        int nextY = Math.min(cursorPosition[1] - 1, 0);
+        int nextY = Math.max(cursorPosition[1] - 1, 0);
         cursorPosition[1] = nextY;
     }
 
     public void moveCursorDown() {
-        int nextY = Math.max(cursorPosition[1] + 1, gameCells[0].length);
+        int nextY = Math.min(cursorPosition[1] + 1, gameCells[0].length - 1);
         cursorPosition[1] = nextY;
     }
 
     public void moveCursorRight() {
-        int nextY = Math.min(cursorPosition[0] - 1, 0);
-        cursorPosition[1] = nextY;
+        int nextX = Math.min(cursorPosition[0] + 1, gameCells.length - 1);
+        cursorPosition[0] = nextX;
     }
 
     public void moveCursorLeft() {
-        int nextY = Math.max(cursorPosition[0] + 1, gameCells.length);
-        cursorPosition[1] = nextY;
+        int nextX = Math.max(cursorPosition[0] - 1, 0);
+        cursorPosition[0] = nextX;
     }
 
     public void toggleBombMark() {

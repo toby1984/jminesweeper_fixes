@@ -1,5 +1,8 @@
 package com.voipfuture.jminesweep.server.cell;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class GameCell {
     public static final char EMPTY_CELL_ICON = '.';
     public static final char UNKNOWN_CELL_ICON = '?';
@@ -9,9 +12,10 @@ public abstract class GameCell {
     private char revealedChar;
     private int[] coordinates;
     private CellState cellState = CellState.UNKNOWN;
-    public GameCell(char revealedChar, GameBoard board) {
+    public GameCell(char revealedChar, int[] coordinates, GameBoard board) {
         this.revealedChar = revealedChar;
         this.board = board;
+        this.coordinates = coordinates;
     }
 
     public char getRevealedChar() {
@@ -61,14 +65,16 @@ public abstract class GameCell {
             triggerOnFlagEffects();
         }
     }
-    abstract void triggerOnFlagEffects();
+    public abstract void triggerOnFlagEffects();
 
-    abstract void triggerOnUnflagEffects();
-    abstract void triggerSelectEffects();
+    public abstract void triggerOnUnflagEffects();
+    public abstract void triggerSelectEffects();
 
     public void select() {
-        setToRevealedState();
-        triggerSelectEffects();
+        if (cellState == CellState.UNKNOWN) {
+            setToRevealedState();
+            triggerSelectEffects();
+        }
     }
 
     public String getClientGuiCell() {
@@ -77,6 +83,28 @@ public abstract class GameCell {
 
     public String getRevealedGuiCell() {
         return "[" + getRevealedChar() + "]";
+    }
+
+    public List<GameCell> findSurroundingCells() {
+        GameCell[][] gameCells = this.board.getGameCells();
+        int[] coordinates = getCoordinates();
+        return findSurroundingCells(coordinates, gameCells);
+    }
+
+    public static List<GameCell> findSurroundingCells(int[] coordinates, GameCell[][] gameCells) {
+        List<GameCell> surroundingCells = new ArrayList<>();
+        for (var i = -1; i <= 1; ++i) {
+            var xCoord = coordinates[0] + i;
+            for (var j = -1; j <= 1; ++j) {
+                var yCoord = coordinates[1] + j;
+                if (xCoord < 0 || xCoord >= gameCells.length ||
+                        yCoord < 0 || yCoord >= gameCells[0].length) {
+                    continue;
+                }
+                surroundingCells.add(gameCells[xCoord][yCoord]);
+            }
+        }
+        return surroundingCells;
     }
 
     public enum CellState implements CellStateCharProvider {

@@ -77,8 +77,16 @@ public class ServerTest {
 
     @Test
     public void testSolveTheGame() {
-        GameBoard gameBoard = new GameBoard(100, 100, Difficulty.EASY);
-
+        // Tests solving the game with a larger map
+        GameBoard gameBoard = new GameBoard(1000, 1000, Difficulty.HARD);
+        for (GameCell[] gameCells : gameBoard.getGameCells()) {
+            for (GameCell gameCell : gameCells) {
+                if (gameCell instanceof BombCell) {
+                    gameCell.toggleFlaggedState();
+                }
+            }
+        }
+        assertEquals(gameBoard.getGameState(), GameState.WON);
     }
 
     @Test

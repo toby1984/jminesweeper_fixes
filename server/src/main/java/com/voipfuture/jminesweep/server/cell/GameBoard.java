@@ -1,6 +1,7 @@
 package com.voipfuture.jminesweep.server.cell;
 
 import com.voipfuture.jminesweep.shared.Difficulty;
+import com.voipfuture.jminesweep.shared.terminal.ANSIScreenRenderer;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -41,16 +42,23 @@ public class GameBoard {
             case LOST -> renderDefeatScreen();
         };
     }
-    private String renderOngoingGame() {
-        final StringBuilder builder = new StringBuilder();
 
+    private String renderOngoingGame() {
+        final ANSIScreenRenderer r = new ANSIScreenRenderer();
+        r.clearScreen();
+
+        final StringBuilder row = new StringBuilder();
+        int y = 0;
         for (GameCell[] gameCell : gameCells) {
+            row.setLength( 0 );
             for (int j = 0; j < gameCells[0].length; ++j) {
-                builder.append(gameCell[j].getClientGuiCell());
+                row.append(gameCell[j].getClientGuiCell());
             }
-            builder.append("\n");
+            r.printTextAt( row.toString(), 0, y );
+            y++;
         }
-        return builder.toString();
+        r.moveCursor( cursorPosition[0]*3+1, cursorPosition[1] );
+        return r.getScreenContents();
     }
 
     private String renderVictoryScreen() {

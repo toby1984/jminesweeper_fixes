@@ -35,15 +35,15 @@ public class GameBoard {
                 .allMatch(cell -> cell.getCellState() == GameCell.CellState.FLAGGED);
     }
 
-    public String render() {
+    public String render(boolean debugMode) {
         return switch (gameState) {
-            case ONGOING -> renderOngoingGame();
+            case ONGOING -> renderOngoingGame(debugMode);
             case WON -> renderVictoryScreen();
             case LOST -> renderDefeatScreen();
         };
     }
 
-    private String renderOngoingGame() {
+    private String renderOngoingGame(boolean debugMode) {
         final ANSIScreenRenderer r = new ANSIScreenRenderer();
         r.clearScreen();
 
@@ -52,7 +52,13 @@ public class GameBoard {
         for (GameCell[] gameCell : gameCells) {
             row.setLength( 0 );
             for (int j = 0; j < gameCells[0].length; ++j) {
-                row.append(gameCell[j].getClientGuiCell());
+                if ( debugMode )
+                {
+                    boolean isBomb = gameCell[j] instanceof BombCell;
+                    row.append( "[" ).append( isBomb ? GameCell.BOMB_CELL_ICON : GameCell.EMPTY_CELL_ICON ).append( "]" );
+                } else {
+                    row.append(gameCell[j].getClientGuiCell());
+                }
             }
             r.printTextAt( row.toString(), 0, y );
             y++;

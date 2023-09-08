@@ -14,10 +14,9 @@ import java.nio.charset.StandardCharsets;
 
 public class Server {
     private static GameBoard board;
-    private static OutputStream out;
-    private static InputStream in;
     private static ServerSocket serverSocket;
-    private static Socket clientSocket;
+
+    private static boolean debugMode;
 
     public static void main(String[] args) throws IOException {
         serverSocket = new ServerSocket(Constants.SERVER_TCP_PORT);
@@ -25,35 +24,42 @@ public class Server {
         // from a previous program run
         serverSocket.setReuseAddress(true);
 
-        boolean hasProcessedFirstPayload = false;
 outer:
-        while (true) {
-            clientSocket = serverSocket.accept();
-            in = clientSocket.getInputStream();
-            out = clientSocket.getOutputStream();
-
-            while (true) {
-                // FIXME Ugly hack because something is going wrong when reading the InputStream
-                // The payload varies in length only the first one is length = 8
-                executePacket(hasProcessedFirstPayload ? in.readNBytes(1) : in.readNBytes(8));
-                GameState gameState = board.getGameState();
-                final byte[] gameGUI = board.render().getBytes(StandardCharsets.UTF_8);
-                out.write(NetworkPacketType.SCREEN_CONTENT.id);
-                out.write( Utils.intToNet( gameGUI.length ) );
-                out.write(gameGUI);
-                out.flush();
-                hasProcessedFirstPayload = true;
-                if (gameState != GameState.ONGOING) {
-                    break outer;
+        while (true)
+        {
+            try ( Socket clientSocket = serverSocket.accept() ) {
+                InputStream in = clientSocket.getInputStream();
+                OutputStream out = clientSocket.getOutputStream();
+                boolean hasProcessedFirstPayload = false;
+                while (true)
+                {
+                    // FIXME Ugly hack because something is going wrong when reading the InputStream
+                    // The payload varies in length only the first one is length = 8
+                    boolean exit = executePacket( hasProcessedFirstPayload ? in.readNBytes( 1 ) : in.readNBytes( 8 ) );
+                    if ( exit )
+                    {
+                        clientSocket.close();
+                        break;
+                    }
+                    GameState gameState = board.getGameState();
+                    final byte[] gameGUI = board.render( debugMode ).getBytes( StandardCharsets.UTF_8 );
+                    out.write( NetworkPacketType.SCREEN_CONTENT.id );
+                    out.write( Utils.intToNet( gameGUI.length ) );
+                    out.write( gameGUI );
+                    out.flush();
+                    hasProcessedFirstPayload = true;
+                    if ( gameState != GameState.ONGOING )
+                    {
+                        break outer;
+                    }
                 }
             }
         }
-        exitGame();
     }
 
-    private static void executePacket(byte[] bytes) throws IOException {
+    private static boolean executePacket(byte[] bytes) throws IOException {
         if (bytes.length == 0) {
-            return;
+            return true;
         }
         int packetId = bytes[0];
         switch (NetworkPacketType.fromID(packetId)) {
@@ -61,7 +67,7 @@ outer:
                 int xSize = bytes[5];
                 int ySize = bytes[6];
                 if (xSize == 0 || ySize == 0) {
-                    return;
+                    return true;
                 }
                 Difficulty difficulty = Difficulty.values()[bytes[7]];
                 board = new GameBoard(xSize, ySize, difficulty);
@@ -72,15 +78,12 @@ outer:
             case MOVE_UP -> board.moveCursorUp();
             case TOGGLE_BOMB_MARK -> board.toggleBombMark();
             case REVEAL -> board.reveal();
-            case QUIT -> exitGame();
+            case QUIT -> {
+                return true;
+            }
+            case TOGGLE_DEBUG_MODE -> debugMode = ! debugMode;
             default -> {}
         }
+        return false;
     }
-
-    private static void exitGame() throws IOException {
-        clientSocket.close();
-        serverSocket.close();
-        System.exit(0);
-    }
-
 }

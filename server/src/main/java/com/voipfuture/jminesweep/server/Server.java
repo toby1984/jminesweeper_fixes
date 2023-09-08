@@ -18,8 +18,6 @@ public class Server {
     private static InputStream in;
     private static ServerSocket serverSocket;
     private static Socket clientSocket;
-    private static OutputStreamWriter outputStreamWriter;
-    private static BufferedWriter writer;
 
     public static void main(String[] args) throws IOException {
         serverSocket = new ServerSocket(Constants.SERVER_TCP_PORT);
@@ -33,20 +31,17 @@ outer:
             clientSocket = serverSocket.accept();
             in = clientSocket.getInputStream();
             out = clientSocket.getOutputStream();
-            outputStreamWriter = new OutputStreamWriter(out);
-            writer = new BufferedWriter(outputStreamWriter);
 
             while (true) {
                 // FIXME Ugly hack because something is going wrong when reading the InputStream
                 // The payload varies in length only the first one is length = 8
                 executePacket(hasProcessedFirstPayload ? in.readNBytes(1) : in.readNBytes(8));
-                writer.write(NetworkPacketType.SCREEN_CONTENT.id);
                 GameState gameState = board.getGameState();
-                final String gameGUI = board.render();
-                final byte[] renderSize = gameGUI.getBytes(StandardCharsets.UTF_8);
-                writer.write(new String(Utils.intToNet(renderSize.length)));
-                writer.write(gameGUI);
-                writer.flush();
+                final byte[] gameGUI = board.render().getBytes(StandardCharsets.UTF_8);
+                out.write(NetworkPacketType.SCREEN_CONTENT.id);
+                out.write( Utils.intToNet( gameGUI.length ) );
+                out.write(gameGUI);
+                out.flush();
                 hasProcessedFirstPayload = true;
                 if (gameState != GameState.ONGOING) {
                     break outer;
@@ -85,10 +80,6 @@ outer:
     private static void exitGame() throws IOException {
         clientSocket.close();
         serverSocket.close();
-        in.close();
-        out.close();
-        writer.close();
-        outputStreamWriter.close();
         System.exit(0);
     }
 
